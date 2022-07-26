@@ -1,14 +1,12 @@
 import React from "react";
 
-const GenreFilter = (props) => {
-  const {
-    genres,
-    valueProperty,
-    textProperty,
-    onGenreFilter,
-    selectedGenre,
-  } = props;
-
+const GenreFilter = ({
+  genres,
+  valueProperty,
+  textProperty,
+  onGenreFilter,
+  selectedGenre,
+}) => {
   return (
     <ul className="list-group">
       {genres.map((genre) => (
@@ -17,8 +15,8 @@ const GenreFilter = (props) => {
           key={genre[valueProperty]}
           className={
             genre === selectedGenre
-              ? "list-group-item active"
-              : "list-group-item"
+              ? "clickable list-group-item active"
+              : "clickable list-group-item"
           }
         >
           {genre[textProperty]}
