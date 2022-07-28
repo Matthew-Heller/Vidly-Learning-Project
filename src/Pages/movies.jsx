@@ -2,9 +2,9 @@ import React, { Component } from "react";
 import { getGenres } from "../services/fakeGenreService";
 import { getMovies } from "../services/fakeMovieService";
 import { paginate } from "../utils/paginate";
-import GenreFilter from "./Common/genreFilter";
-import Pagination from "./Common/pagination";
-import MoviesTable from "./movieTables";
+import GenreFilter from "../components/Common/genreFilter";
+import Pagination from "../components/Common/pagination";
+import MoviesTable from "../components/movieTables";
 import _ from "lodash";
 
 class Movies extends Component {
