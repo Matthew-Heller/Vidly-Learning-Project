@@ -6,6 +6,7 @@ import GenreFilter from "../components/Common/genreFilter";
 import Pagination from "../components/Common/pagination";
 import MoviesTable from "../components/movieTables";
 import _ from "lodash";
+import { Link, useNavigate } from "react-router-dom";
 
 class Movies extends Component {
   state = {
@@ -95,6 +96,9 @@ class Movies extends Component {
           />
         </div>
         <div className="col">
+          <Link className="btn btn-primary" to="new">
+            New Movie
+          </Link>
           <MoviesTable
             movies={movies}
             onDelete={this.handleDelete}

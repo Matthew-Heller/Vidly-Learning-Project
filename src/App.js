@@ -6,6 +6,8 @@ import Customers from "./Pages/customers";
 import Rentals from "./Pages/rentals";
 import NotFound from "./Pages/notFound";
 import MovieForm from "./Pages/movieForm";
+import LoginForm from "./components/loginForm";
+import Register from "./Pages/register";
 
 class App extends Component {
   state = {};
@@ -15,6 +17,8 @@ class App extends Component {
         <NavBar />
         <main className="container">
           <Routes>
+            <Route path="register" element={<Register />} />
+            <Route path="login" element={<LoginForm />} />
             <Route path="movies/:id" element={<MovieForm />} />
             <Route path="movies" element={<Movies />}></Route>
             <Route path="customers" element={<Customers />} />
