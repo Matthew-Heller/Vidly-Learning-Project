@@ -3,7 +3,7 @@ import Joi from "joi-browser";
 import Form from "../components/Common/form";
 import { getGenres } from "../services/fakeGenreService";
 import { saveMovie, getMovie } from "../services/fakeMovieService";
-import { withRouter } from "../components/Common/hocs";
+import { withRouter } from "../utils/hocs";
 
 class MovieForm extends Form {
   state = {
@@ -13,7 +13,7 @@ class MovieForm extends Form {
       numberInStock: "",
       dailyRentalRate: "",
     },
-    genre: [],
+    genres: [],
     errors: {},
   };
 
@@ -41,12 +41,12 @@ class MovieForm extends Form {
     const genres = getGenres();
     this.setState({ genres });
 
-    const movieId = this.props.params._id;
+    const movieId = this.props.params.id;
     console.log(movieId);
     if (movieId === "new") return;
 
     const movie = getMovie(movieId);
-    if (!movie) return this.props.navigate("not-found", { replace: true });
+    if (!movie) return this.props.navigate("/not-found");
 
     this.setState({ data: this.mapToViewModel(movie) });
   }
@@ -62,18 +62,25 @@ class MovieForm extends Form {
   }
 
   doSubmit = () => {
+    console.log(this.state.data);
     saveMovie(this.state.data);
-    this.props.history.push("/movies");
+    this.props.navigate("/movies");
   };
 
   render() {
     return (
       <div>
         <h1 className="m-2">Movie Form</h1>
-        {}
-        <button className="btn btn-primary">Save</button>
+        <form onSubmit={this.handleSubmit}>
+          {this.renderInput("title", "Title")}
+          {this.renderSelect("genreId", "Genre", this.state.genres)}
+          {this.renderInput("numberInStock", "Number in Stock", "number")}
+          {this.renderInput("dailyRentalRate", "Rate")}
+          {this.renderButton("Save")}
+        </form>
       </div>
     );
   }
 }
+
 export default withRouter(MovieForm);
