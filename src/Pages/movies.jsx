@@ -5,15 +5,18 @@ import { paginate } from "../utils/paginate";
 import GenreFilter from "../components/Common/genreFilter";
 import Pagination from "../components/Common/pagination";
 import MoviesTable from "../components/movieTables";
+import SearchBox from "../components/Common/searchBox";
 import _ from "lodash";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 class Movies extends Component {
   state = {
     movies: [],
+    genres: [],
     pageSize: 4,
     currentPage: 1,
-    genres: [],
+    searchQuery: "",
+    selectedGenre: null,
     sortColumn: { path: "title", order: "asc" },
   };
 
@@ -39,9 +42,14 @@ class Movies extends Component {
     this.setState({ currentPage: page });
   };
 
+  handleSearch = (query) => {
+    this.setState({ searchQuery: query, selectedGenre: null, currentPage: 1 });
+  };
+
   handleGenreFilter = (genre) => {
     this.setState({
       selectedGenre: genre,
+      searchQuery: "",
       currentPage: 1,
     });
   };
@@ -56,13 +64,19 @@ class Movies extends Component {
       pageSize,
       currentPage,
       selectedGenre,
+      searchQuery,
       sortColumn,
     } = this.state;
 
-    const filteredMovies =
-      selectedGenre && selectedGenre._id
-        ? allMovies.filter((m) => m.genre._id === selectedGenre._id)
-        : allMovies;
+    let filteredMovies = allMovies;
+    if (searchQuery)
+      filteredMovies = allMovies.filter((m) =>
+        m.title.toLowerCase().startsWith(searchQuery.toLowerCase())
+      );
+    else if (selectedGenre && selectedGenre._id)
+      filteredMovies = allMovies.filter(
+        (m) => m.genre._id === selectedGenre._id
+      );
 
     const sortedMovies = _.orderBy(
       filteredMovies,
@@ -82,6 +96,7 @@ class Movies extends Component {
       genres,
       sortColumn,
       selectedGenre,
+      searchQuery,
     } = this.state;
 
     const { totalCount, data: movies } = this.getPagedData();
@@ -96,9 +111,14 @@ class Movies extends Component {
           />
         </div>
         <div className="col">
-          <Link className="btn btn-primary" to="new">
+          <Link
+            className="btn btn-primary"
+            to="new"
+            style={{ marginBottom: 20, marginTop: 50 }}
+          >
             New Movie
           </Link>
+          <SearchBox value={searchQuery} onChange={this.handleSearch} />
           <MoviesTable
             movies={movies}
             onDelete={this.handleDelete}
