@@ -1,14 +1,13 @@
 import React, { Component } from "react";
-import { getGenres } from "../services/fakeGenreService";
-import { getMovies } from "../services/fakeMovieService";
 import { paginate } from "../utils/paginate";
 import GenreFilter from "../components/Common/genreFilter";
 import Pagination from "../components/Common/pagination";
 import MoviesTable from "../components/movieTables";
 import SearchBox from "../components/Common/searchBox";
+import { getGenres } from "../services/genreService";
 import _ from "lodash";
 import { Link } from "react-router-dom";
-
+import { deleteMovie, getMovies } from "../services/movieService";
 class Movies extends Component {
   state = {
     movies: [],
@@ -20,14 +19,21 @@ class Movies extends Component {
     sortColumn: { path: "title", order: "asc" },
   };
 
-  componentDidMount() {
-    const genres = [{ _id: "", name: "All Genres" }, ...getGenres()];
-    this.setState({ movies: getMovies(), genres });
+  async componentDidMount() {
+    const { data: genresObject } = await getGenres();
+    const genresSpread = Object.values(genresObject);
+    const genres = [{ id: "", name: "All Genres" }, ...genresSpread];
+    const { data: moviesObject } = await getMovies();
+    const movies = Object.values(moviesObject);
+    this.setState({ genres, movies });
   }
 
-  handleDelete = (movie) => {
-    const movies = this.state.movies.filter((m) => m._id !== movie._id);
+  handleDelete = async (movie) => {
+    const originalMovies = this.state.movies;
+    const movies = originalMovies.filter((m) => m._id !== movie._id);
     this.setState({ movies });
+
+    await deleteMovie(movie._id);
   };
 
   handleLike = (movie) => {

@@ -8,7 +8,6 @@ import NotFound from "./Pages/notFound";
 import MovieForm from "./Pages/movieForm";
 import LoginForm from "./components/loginForm";
 import Register from "./Pages/register";
-
 class App extends Component {
   state = {};
   render() {
